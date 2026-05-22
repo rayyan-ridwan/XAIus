@@ -61,6 +61,30 @@ class SelectorTests(unittest.TestCase):
         self.assertEqual(len(recommendations), 2)
         self.assertEqual([profile.name for profile in recommendations], ["A", "B"])
 
+    def test_preferred_tags_increase_score(self) -> None:
+        selector = XAISelector()
+        matching = ModelProfile(
+            name="Matching",
+            family="ensemble",
+            transparency=0.6,
+            interpretability=0.6,
+            salience=0.6,
+            tags=("healthcare",),
+        )
+        non_matching = ModelProfile(
+            name="NonMatching",
+            family="ensemble",
+            transparency=0.6,
+            interpretability=0.6,
+            salience=0.6,
+            tags=("finance",),
+        )
+
+        ranked = selector.rank([non_matching, matching], preferred_tags=("healthcare",))
+
+        self.assertEqual(ranked[0].profile.name, "Matching")
+        self.assertGreater(ranked[0].score, ranked[1].score)
+
 
 if __name__ == "__main__":
     unittest.main()

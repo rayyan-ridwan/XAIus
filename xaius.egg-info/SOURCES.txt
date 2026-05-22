@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+tests/test_selector.py
+xaius/__init__.py
+xaius/models.py
+xaius/selector.py
+xaius.egg-info/PKG-INFO
+xaius.egg-info/SOURCES.txt
+xaius.egg-info/dependency_links.txt
+xaius.egg-info/top_level.txt
