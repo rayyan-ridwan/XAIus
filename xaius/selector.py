@@ -5,6 +5,9 @@ from typing import Iterable, Sequence
 
 from .models import ModelProfile
 
+TAG_BONUS_PER_MATCH = 0.05
+FAMILY_BONUS = 0.02
+
 
 @dataclass(frozen=True)
 class RankedModel:
@@ -22,12 +25,10 @@ class XAISelector:
         profiles: Sequence[ModelProfile],
         preferred_tags: Iterable[str] = (),
     ) -> list[RankedModel]:
-        keywords = tuple(preferred_tags)
-
         ranked = [
             RankedModel(
                 profile=profile,
-                score=self._score(profile, keywords),
+                score=self._score(profile, preferred_tags),
             )
             for profile in profiles
         ]
@@ -52,6 +53,6 @@ class XAISelector:
     def _score(self, profile: ModelProfile, preferred_tags: Iterable[str]) -> float:
         base_score = profile.explainability_score()
         tag_matches = profile.matches(preferred_tags)
-        tag_bonus = 0.05 * tag_matches
-        family_bonus = 0.02 if profile.family.lower() in {"rule-based", "tree"} else 0.0
+        tag_bonus = TAG_BONUS_PER_MATCH * tag_matches
+        family_bonus = FAMILY_BONUS if profile.family.lower() in {"rule-based", "tree"} else 0.0
         return round(base_score + tag_bonus + family_bonus, 4)

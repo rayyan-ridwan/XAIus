@@ -59,7 +59,7 @@ class SelectorTests(unittest.TestCase):
         recommendations = selector.recommend(profiles, top_k=2)
 
         self.assertEqual(len(recommendations), 2)
-        self.assertTrue(all(isinstance(profile, ModelProfile) for profile in recommendations))
+        self.assertEqual([profile.name for profile in recommendations], ["A", "B"])
 
 
 if __name__ == "__main__":
